@@ -1,5 +1,2 @@
-  const List<String> OPERATORS = ['1','2','3','+'
-                            '4','5','6','-',
-                            '7','8','9','x',
-                            '0','AC','=','/'    
-  ];
+
+const List<String> OPERATORS = ['+' '-','x','AC','=','/'];
