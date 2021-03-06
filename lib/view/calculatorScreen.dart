@@ -1,4 +1,5 @@
 import 'package:calculate/componets/digit_button.dart';
+import 'package:calculate/constants/operators.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorScreen extends StatefulWidget {
@@ -9,6 +10,28 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
+    Widget _rowOne({List<String> numbers, String operator}) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(
+          numbers.length + 1,
+          (e) {
+            print(e);
+            print("size: ${numbers.length}");
+            return e == numbers.length
+                ? DigitButton(
+                    color: Colors.yellow,
+                    number: operator,
+                  )
+                : DigitButton(
+                    color: Colors.yellow,
+                    number: numbers[e],
+                  );
+          },
+        ),
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -17,32 +40,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               color: Colors.red,
               height: 200,
             ),
-            
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                DigitButton(
-                  color: Colors.yellow,
-                  number: '1',
-                  onChanged: (value){
-                    print(value);
-
-                  },
-                ),
-                DigitButton(
-                  color: Colors.yellow,
-                  number: '1',
-                ),
-                DigitButton(
-                  color: Colors.yellow,
-                  number: '1',
-                ),
-                DigitButton(
-                  color: Colors.yellow,
-                  number: '1',
-                )
-              ],
-            ),
+            _rowOne(numbers: ['1', '2', '3'], operator: '+'),
+            _rowOne(numbers: ['4', '5', '6'], operator: '-'),
+            _rowOne(numbers: ['7', '8', '9'], operator: 'x'),
+            _rowOne(numbers: ['0'], operator: '/')
           ],
         ),
       ),
