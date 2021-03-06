@@ -10,7 +10,8 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  String _opration = "";
+  String _expression = "";
+  bool oparationsIsDisable = true;
 
   Widget _row({List<String> numbers, List<String> operator}) {
     return Row(
@@ -23,22 +24,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.orange,
                   number: operator[e - numbers.length],
                   onChanged: (value) {
-                    print("você digitou : $value");
-                    setState(() {
-                      if (isOperatorValidate()) {
-                        expression(value);
-                        direct(value);
+                    if (!oparationsIsDisable) {
+                      print("você digitou : $value");
+                      if (expressionIsValid(value)) {
+                        setState(() {
+                          direct(value);
+                        });
                       }
-                    });
+                    }
                   },
                 )
               : DigitButton(
                   color: Colors.grey.withOpacity(0.6),
                   number: numbers[e],
                   onChanged: (value) {
+                    oparationsIsDisable = false;
                     print("você digitou : $value");
                     setState(() {
-                      expression(value);
+                      direct(value);
                     });
                   },
                 );
@@ -47,29 +50,43 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  bool isOperatorValidate() {
-    if (_opration.length > 0) {
-      print("anterior: ${_opration[_opration.length - 1]}");
-      String previous = _opration[_opration.length - 1];
-      if (OPERATORS.contains(previous)) {
+  bool checkPrevious(String value) {
+    print("validando anteriores");
+    if (_expression.length > 0) {
+      String previous = _expression[_expression.length - 1];
+      String current = value;
+
+      if (OPERATORS.contains(previous) && current != 'AC' && current != '=') {
+        print("invalida");
         return false;
       }
     }
+    print("validando anteriores: valida");
+    print("-------------");
     return true;
   }
 
-  void expression(String value) {
-    _opration += value;
+  bool expressionIsValid(String value) {
+    if (checkPrevious(value)) {
+      return true;
+    }
+    return false;
+  }
+
+  void addExpression(String value) {
+    _expression += value;
   }
 
   void clear() {
+    print("limpando....");
     setState(() {
-      _opration = "";
+      oparationsIsDisable = true;
+      _expression = "";
     });
   }
 
-  void calculate(String option){
-
+  void calculate(String expression) {
+    print("calcular: expression");
   }
 
   void direct(String option) {
@@ -78,15 +95,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         clear();
         break;
       case '=':
-      calculate(option);
+        calculate(option);
+        break;
+      default:
+        addExpression(option);
         break;
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const SPACE = SizedBox(height: 5);
-    print(" opa$_opration");
+    print(" expressão: $_expression");
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -103,7 +128,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     child: Align(
                       alignment: AlignmentDirectional(1, 0.8),
                       child: Text(
-                        _opration,
+                        _expression,
                         style: TextStyle(fontSize: 70, color: Colors.white),
                       ),
                     ),
