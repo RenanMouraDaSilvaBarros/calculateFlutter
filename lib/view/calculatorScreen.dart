@@ -18,8 +18,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       children: List.generate(
         numbers.length + operator.length,
         (e) {
-          print(e);
-          print("size: ${numbers.length}");
           return e >= numbers.length
               ? DigitButton(
                   color: Colors.orange,
@@ -27,8 +25,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   onChanged: (value) {
                     print("você digitou : $value");
                     setState(() {
-                      _opration += value;
-                      calculate(value);
+                      if (isOperatorValidate()) {
+                        expression(value);
+                        direct(value);
+                      }
                     });
                   },
                 )
@@ -38,7 +38,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   onChanged: (value) {
                     print("você digitou : $value");
                     setState(() {
-                      _opration += value;
+                      expression(value);
                     });
                   },
                 );
@@ -47,18 +47,38 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  bool isOperatorValidate() {
+    if (_opration.length > 0) {
+      print("anterior: ${_opration[_opration.length - 1]}");
+      String previous = _opration[_opration.length - 1];
+      if (OPERATORS.contains(previous)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void expression(String value) {
+    _opration += value;
+  }
+
   void clear() {
     setState(() {
       _opration = "";
     });
   }
 
-  void calculate(String option) {
+  void calculate(String option){
+
+  }
+
+  void direct(String option) {
     switch (option) {
       case 'AC':
         clear();
         break;
       case '=':
+      calculate(option);
         break;
     }
   }

@@ -1,2 +1,2 @@
 
-const List<String> OPERATORS = ['+' '-','x','AC','=','/'];
+const List<String> OPERATORS = ['+','-','x','AC','=','/'];
