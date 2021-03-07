@@ -10,7 +10,8 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  String _expression = "";
+  List<String> _expression = [];
+  String _expressionDisplay = "";
   bool oparationsIsDisable = true;
 
   Widget _row({List<String> numbers, List<String> operator}) {
@@ -74,19 +75,49 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   void addExpression(String value) {
-    _expression += value;
+    _expression.add(value);
+    _expressionDisplay += value;
   }
 
   void clear() {
     print("limpando....");
     setState(() {
       oparationsIsDisable = true;
-      _expression = "";
+      _expression = [];
+      _expressionDisplay = "";
     });
   }
 
   void calculate(String expression) {
     print("calcular: expression");
+
+    var result = [];
+    List<String> copy = [];
+    _expression.forEach((e) {
+      copy.add(e);
+    });
+
+    // var index = _expression.indexOf('x');
+    if (_expression.length % 2 == 0) {
+      _expression.removeLast();
+    }
+    for (int i = 0; i < copy.length; i++) {
+      if (copy[i] == 'x') {
+        double previus =result.isEmpty?double.parse(_expression[i - 1]):result.last;
+        double next = double.parse(_expression[i + 1]);
+        print("anterior:$previus priximo:$next");
+
+        result.add(previus * next);
+      } else if (copy[i] == '/') {
+        double previus =result.isEmpty? double.parse(_expression[i - 1]):result.last;
+        double next = double.parse(_expression[i + 1]);
+        print("anterior:$previus priximo:$next");
+        result.add(previus * (1 / next));
+      }
+    }
+    print(result);
+
+    //procurar
   }
 
   void direct(String option) {
@@ -128,7 +159,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     child: Align(
                       alignment: AlignmentDirectional(1, 0.8),
                       child: Text(
-                        _expression,
+                        _expressionDisplay,
                         style: TextStyle(fontSize: 70, color: Colors.white),
                       ),
                     ),
