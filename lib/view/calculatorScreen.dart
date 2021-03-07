@@ -27,7 +27,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   onChanged: (value) {
                     if (!oparationsIsDisable) {
                       print("você digitou : $value");
-                      if (expressionIsValid(value)) {
+                      if (true) {
                         setState(() {
                           direct(value);
                         });
@@ -51,29 +51,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  bool checkPrevious(String value) {
-    print("validando anteriores");
-    if (_expression.length > 0) {
-      String previous = _expression[_expression.length - 1];
-      String current = value;
-
-      if (OPERATORS.contains(previous) && current != 'AC' && current != '=') {
-        print("invalida");
-        return false;
-      }
-    }
-    print("validando anteriores: valida");
-    print("-------------");
-    return true;
-  }
-
-  bool expressionIsValid(String value) {
-    if (checkPrevious(value)) {
-      return true;
-    }
-    return false;
-  }
-
   void addExpression(String value) {
     _expression.add(value);
     _expressionDisplay += value;
@@ -91,33 +68,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void calculate(String expression) {
     print("calcular: expression");
 
-    var result = [];
-    List<String> copy = [];
-    _expression.forEach((e) {
-      copy.add(e);
-    });
-
-    // var index = _expression.indexOf('x');
-    if (_expression.length % 2 == 0) {
-      _expression.removeLast();
-    }
-    for (int i = 0; i < copy.length; i++) {
-      if (copy[i] == 'x') {
-        double previus =result.isEmpty?double.parse(_expression[i - 1]):result.last;
-        double next = double.parse(_expression[i + 1]);
-        print("anterior:$previus priximo:$next");
-
-        result.add(previus * next);
-      } else if (copy[i] == '/') {
-        double previus =result.isEmpty? double.parse(_expression[i - 1]):result.last;
-        double next = double.parse(_expression[i + 1]);
-        print("anterior:$previus priximo:$next");
-        result.add(previus * (1 / next));
-      }
-    }
-    print(result);
-
-    //procurar
   }
 
   void direct(String option) {
@@ -153,7 +103,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               Container(
                 //  color: Colors.red,
                 width: double.infinity,
-                height: 200,
+                height: 180,
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     child: Align(
