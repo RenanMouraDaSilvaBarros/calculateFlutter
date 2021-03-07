@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:calculate/componets/digit_button.dart';
-import 'package:calculate/constants/operators.dart';
+import 'package:calculate/utils/validates.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorScreen extends StatefulWidget {
@@ -25,13 +25,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.orange,
                   number: operator[e - numbers.length],
                   onChanged: (value) {
-                    if (!oparationsIsDisable) {
+                    if (_expressionDisplay.isNotEmpty) {
                       print("você digitou : $value");
-                      if (true) {
+
+                      if (operationIsAllowed(_expressionDisplay, value)) {
                         setState(() {
                           direct(value);
+                          
                         });
                       }
+                    }else{
+                      print("ERRO carectere bloqueado $value");
                     }
                   },
                 )
@@ -39,7 +43,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.grey.withOpacity(0.6),
                   number: numbers[e],
                   onChanged: (value) {
-                    oparationsIsDisable = false;
+                   
                     print("você digitou : $value");
                     setState(() {
                       direct(value);
@@ -76,9 +80,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         clear();
         break;
       case '=':
+        //se tiver valido
         calculate(option);
         break;
       default:
+        //se tiver valido
         addExpression(option);
         break;
     }
@@ -92,7 +98,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     const SPACE = SizedBox(height: 5);
-    print(" expressão: $_expression");
+    print(" expressão: $_expressionDisplay");
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
