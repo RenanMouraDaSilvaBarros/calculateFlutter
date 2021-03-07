@@ -25,17 +25,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.orange,
                   number: operator[e - numbers.length],
                   onChanged: (value) {
-                    if (_expressionDisplay.isNotEmpty) {
-                      print("você digitou : $value");
-
-                      if (operationIsAllowed(_expressionDisplay, value)) {
-                        setState(() {
-                          direct(value);
-                          
-                        });
-                      }
-                    }else{
-                      print("ERRO carectere bloqueado $value");
+                    if (operationIsAllowed(_expressionDisplay, value)) {
+                      setState(() {
+                        direct(value);
+                      });
                     }
                   },
                 )
@@ -43,7 +36,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.grey.withOpacity(0.6),
                   number: numbers[e],
                   onChanged: (value) {
-                   
                     print("você digitou : $value");
                     setState(() {
                       direct(value);
@@ -70,8 +62,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   void calculate(String expression) {
-    print("calcular: expression");
-
+    print("calcular: $expression");
   }
 
   void direct(String option) {
