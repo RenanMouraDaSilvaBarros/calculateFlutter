@@ -72,9 +72,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     String _operation = getOperation(_expressionDisplay);
     var _getNumbers = _expressionDisplay.split(_operation);
     print("${_getNumbers.first} $_operation ${_getNumbers.first}");
+
+    _expressionDisplay =
+        _calculate.intelligent(_operation, _getNumbers.first, _getNumbers.last);
     setState(() {
-      _expressionDisplay = _calculate.intelligent(
-          _operation, _getNumbers.first, _getNumbers.last);
+      _expressionDisplay = formact(_expressionDisplay);
+
       _disableNumber = true;
     });
   }
@@ -99,13 +102,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.only(bottom: 3),
                 width: double.infinity,
-                height:MediaQuery.of(context).size.height * 0.33,
+                height: MediaQuery.of(context).size.height * 0.33,
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     child: Align(

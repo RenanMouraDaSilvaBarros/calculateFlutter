@@ -68,8 +68,14 @@ String getOperation(String expression) {
   }
 }
 
-String formact(String expression){
+String formact(String expression) {
+  int point = expression.indexOf('.');
 
-  var ponto = expression.split(".");
-  
+  if (point != -1) {
+    String next = expression[point + 1];
+    if (next == '0') {
+      return expression.substring(0, point);
+    }
+  }
+  return expression;
 }
