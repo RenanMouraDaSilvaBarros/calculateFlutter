@@ -1,9 +1,8 @@
-import 'package:calculate/view/calculatorScreen.dart';
+import 'package:calculate/view/initial.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(MaterialApp(
-    
-    home:CalculatorScreen()
+    home:InitialScreen()
   ));
 }

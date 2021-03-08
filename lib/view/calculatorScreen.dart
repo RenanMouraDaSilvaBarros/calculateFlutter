@@ -3,6 +3,7 @@ import 'package:calculate/constants/operators.dart';
 import 'package:calculate/models/calculateModel.dart';
 import 'package:calculate/utils/business_rule.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 
 class CalculatorScreen extends StatefulWidget {
   @override
@@ -12,7 +13,6 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expressionDisplay = "";
   bool _disableNumber = false;
-  bool _splash = true;
 
   Widget _row({List<String> numbers, List<String> operator}) {
     return Row(
@@ -93,32 +93,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
-@override
-void initState() {
-    // TODO: implement initState
-
-    Future.delayed(Duration(seconds: 1), (){
-      _splash = false;
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: _splash?
-          Container():
-        
-        Padding(
+        body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.only(bottom: 3),
                 width: double.infinity,
-                height: 200,
+                height:MediaQuery.of(context).size.height * 0.4,
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     child: Align(

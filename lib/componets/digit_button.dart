@@ -17,7 +17,7 @@ class DigitButton extends StatelessWidget {
       },
       child: CircleAvatar(
         backgroundColor: color,
-        radius: size??38,
+        radius: size??34,
         child: Text(number, style: TextStyle(fontSize: 40, color: Colors.white)),
       ),
     );
