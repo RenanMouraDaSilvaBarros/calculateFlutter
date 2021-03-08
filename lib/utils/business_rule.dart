@@ -4,6 +4,15 @@ bool isOperation(String operation) {
   return OPERATORS.contains(operation);
 }
 
+bool hasOperation(String expression) {
+  for (int i = 0; i < expression.length; i++) {
+    if (isOperation(expression[i])) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool isConfig(String operation) {
   return CONFIG.contains(operation);
 }
@@ -20,15 +29,17 @@ bool expressionIsNotEmpty(String expression, String value) {
 bool onlyOperation(String expression, String value) {
   int qtd = 0;
   expression += value;
-  for (int i = 0; i < expression.length ; i++) {
+  for (int i = 0; i < expression.length; i++) {
     if (isOperation(expression[i])) qtd++;
   }
-  if (qtd == 1 || isConfig(value)) {
+  if (qtd == 1 || value == 'AC') {
     return true;
+  } else if (value == '=') {
+    print("ERRO! formato invalido!");
   } else {
     print("ERRO! operadores em excesso!");
-    return false;
   }
+  return false;
 }
 
 bool checkPrevious(String expression, String value) {
@@ -42,9 +53,17 @@ bool checkPrevious(String expression, String value) {
 }
 
 bool operationIsAllowed(String expression, String value) {
-  if (expressionIsNotEmpty(expression, value) && checkPrevious(expression, value) && onlyOperation(expression, value)) {
+  if (expressionIsNotEmpty(expression, value) &&
+      checkPrevious(expression, value) &&
+      onlyOperation(expression, value)) {
     return true;
   }
 
   return false;
+}
+
+String getOperation(String expression) {
+  for (int i = 0; i < expression.length; i++) {
+    if (isOperation(expression[i])) return expression[i];
+  }
 }

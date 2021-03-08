@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class DigitButton extends StatelessWidget {
   final String number;
   final Color color;
+  final size;
   final ValueChanged<String> onChanged;
 
-  const DigitButton({Key key, this.number, this.color, this.onChanged})
+  const DigitButton({Key key, this.number, this.color, this.onChanged, this.size})
       : super(key: key);
 
   @override
@@ -16,8 +17,7 @@ class DigitButton extends StatelessWidget {
       },
       child: CircleAvatar(
         backgroundColor: color,
-      
-        radius: 35,
+        radius: size??38,
         child: Text(number, style: TextStyle(fontSize: 40, color: Colors.white)),
       ),
     );

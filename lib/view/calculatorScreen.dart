@@ -1,7 +1,7 @@
-import 'dart:ffi';
-
 import 'package:calculate/componets/digit_button.dart';
-import 'package:calculate/utils/validates.dart';
+import 'package:calculate/constants/operators.dart';
+import 'package:calculate/models/calculateModel.dart';
+import 'package:calculate/utils/business_rule.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorScreen extends StatefulWidget {
@@ -10,9 +10,9 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  List<String> _expression = [];
   String _expressionDisplay = "";
-  bool oparationsIsDisable = true;
+  bool _disableNumber = false;
+  bool _splash = true;
 
   Widget _row({List<String> numbers, List<String> operator}) {
     return Row(
@@ -27,7 +27,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   onChanged: (value) {
                     if (operationIsAllowed(_expressionDisplay, value)) {
                       setState(() {
-                        direct(value);
+                        _direct(value);
+                        if (isOperation(value)) {
+                          _disableNumber = false;
+                        }
                       });
                     }
                   },
@@ -37,9 +40,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   number: numbers[e],
                   onChanged: (value) {
                     print("você digitou : $value");
-                    setState(() {
-                      direct(value);
-                    });
+                    if (!_disableNumber) {
+                      setState(() {
+                        _direct(value);
+                      });
+                    } else {
+                      print("números desabilitado!");
+                    }
                   },
                 );
         },
@@ -47,67 +54,78 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  void addExpression(String value) {
-    _expression.add(value);
+  void _addExpression(String value) {
     _expressionDisplay += value;
   }
 
-  void clear() {
+  void _clear() {
     print("limpando....");
     setState(() {
-      oparationsIsDisable = true;
-      _expression = [];
       _expressionDisplay = "";
+      _disableNumber = false;
     });
   }
 
-  void calculate(String expression) {
-    print("calcular: $expression");
+  void _calculate() {
+    print("calcular: $_expressionDisplay");
+    CalculateModel _calculate = CalculateModel();
+    String _operation = getOperation(_expressionDisplay);
+    var _getNumbers = _expressionDisplay.split(_operation);
+    print("${_getNumbers.first} $_operation ${_getNumbers.first}");
+    setState(() {
+      _expressionDisplay = _calculate.intelligent(
+          _operation, _getNumbers.first, _getNumbers.last);
+      _disableNumber = true;
+    });
   }
 
-  void direct(String option) {
+  void _direct(String option) {
     switch (option) {
       case 'AC':
-        clear();
+        _clear();
         break;
       case '=':
-        //se tiver valido
-        calculate(option);
+        _calculate();
         break;
       default:
-        //se tiver valido
-        addExpression(option);
+        _addExpression(option);
         break;
     }
   }
 
-  @override
-  void initState() {
+@override
+void initState() {
+    // TODO: implement initState
+
+    Future.delayed(Duration(seconds: 1), (){
+      _splash = false;
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const SPACE = SizedBox(height: 5);
-    print(" expressão: $_expressionDisplay");
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Padding(
+        body: _splash?
+          Container():
+        
+        Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Container(
-                //  color: Colors.red,
+                padding: EdgeInsets.only(bottom: 3),
                 width: double.infinity,
-                height: 180,
+                height: 200,
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     child: Align(
-                      alignment: AlignmentDirectional(1, 0.8),
+                      alignment: const AlignmentDirectional(1, 0.1),
                       child: Text(
                         _expressionDisplay,
-                        style: TextStyle(fontSize: 70, color: Colors.white),
+                        style: TextStyle(fontSize: 80, color: Colors.white),
                       ),
                     ),
                   ),
