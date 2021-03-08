@@ -67,3 +67,9 @@ String getOperation(String expression) {
     if (isOperation(expression[i])) return expression[i];
   }
 }
+
+String formact(String expression){
+
+  var ponto = expression.split(".");
+  
+}

@@ -105,7 +105,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               Container(
                 padding: EdgeInsets.only(bottom: 3),
                 width: double.infinity,
-                height:MediaQuery.of(context).size.height * 0.4,
+                height:MediaQuery.of(context).size.height * 0.33,
                 child: Scrollbar(
                   child: SingleChildScrollView(
                     child: Align(

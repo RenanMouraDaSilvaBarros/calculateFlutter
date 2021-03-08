@@ -11,7 +11,7 @@ class InitialScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.black,
           flexibleSpace: Marquee(
-            text: '(-__-)   Renan Moura developer   (-__-)  Dell Lead',
+            text: '(-__-)   Renan Moura developer   (-__-)  Dell lead flutter course ',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
