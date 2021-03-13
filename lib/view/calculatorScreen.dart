@@ -1,11 +1,9 @@
 import 'dart:core';
-
 import 'package:calculate/componets/digit_button.dart';
 import 'package:calculate/constants/operators.dart';
 import 'package:calculate/models/calculateModel.dart';
 import 'package:calculate/utils/business_rule.dart';
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
 
 class CalculatorScreen extends StatefulWidget {
   @override
@@ -14,9 +12,9 @@ class CalculatorScreen extends StatefulWidget {
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expressionDisplay = "";
-  String firstOperating = "";
-  String secondOperating = "";
-  String option = "";
+  String _firstOperating = "";
+  String _secondOperating = "";
+  String _option = "";
   String operator = "";
   CalculateModel calculate = CalculateModel();
 
@@ -49,73 +47,60 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  void updatefirstOperating(String value) {
-    print("primeiro");
-    setState(() {
-      firstOperating += value;
-      _expressionDisplay = "$firstOperating$option$secondOperating";
-    });
-  }
+  void updatefirstOperating(String value) => setState(() {
+        _firstOperating += value;
+        _expressionDisplay = "$_firstOperating$_option$_secondOperating";
+      });
 
-  void updateOption(String value) {
-    print("operador");
-    setState(() {
-      option = value;
-      _expressionDisplay = "$firstOperating$option$secondOperating";
-    });
-  }
+  void updateOption(String value) => setState(() {
+        _option = value;
+        _expressionDisplay = "$_firstOperating$_option$_secondOperating";
+      });
 
-  void updateSecondOperating(String value) {
-    print("terceiro");
-    setState(() {
-      secondOperating += value;
-      _expressionDisplay = "$firstOperating$option$secondOperating";
-    });
-  }
+  void updateSecondOperating(String value) => setState(() {
+        _secondOperating += value;
+        _expressionDisplay = "$_firstOperating$_option$_secondOperating";
+      });
 
-  void clear() {
-    setState(() {
-      firstOperating = "";
-      secondOperating = "";
-      option = "";
-      _expressionDisplay = "";
-    });
-  }
+  void clear() => setState(() {
+        _firstOperating = "";
+        _secondOperating = "";
+        _option = "";
+        _expressionDisplay = "";
+      });
 
   void clearValue() {
-    firstOperating = "";
-    secondOperating = "";
-    option = "";
+    _firstOperating = "";
+    _secondOperating = "";
+    _option = "";
     _expressionDisplay = "";
   }
 
-  void result() {
+  void _result() {
     var cache;
-    if (firstOperating.isNotEmpty &&
-        option.isNotEmpty &&
-        secondOperating.isNotEmpty) {
-      print("resultado");
+    if (_firstOperating.isNotEmpty &&
+        _option.isNotEmpty &&
+        _secondOperating.isNotEmpty) {
 
       setState(() {
         _expressionDisplay =
-            calculate.intelligent(option, firstOperating, secondOperating);
+            calculate.intelligent(_option, _firstOperating, _secondOperating);
         cache = _expressionDisplay;
       });
 
       clearValue();
-      firstOperating = formactDecimal(cache);
-      _expressionDisplay = "$firstOperating$option$secondOperating";
+      _firstOperating = formactDecimal(cache);
+      _expressionDisplay = "$_firstOperating$_option$_secondOperating";
     }
   }
 
-//primeiro operador
   void update(String value) {
     switch (value) {
       case "AC":
         clear();
         break;
       case "=":
-        result();
+        _result();
         break;
       default:
         operation(value);
@@ -127,14 +112,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     //atualiza o operador (-,+, *, /)
     if (!isConfig(value) &&
         isOperation(value) &&
-        firstOperatingIsValid(firstOperating)) {
+        firstOperatingIsValid(_firstOperating)) {
       updateOption(value);
-    } else if (firstOperatingIsValid(firstOperating + value) &&
-        option.isEmpty) {
+    } else if (firstOperatingIsValid(_firstOperating + value) &&
+        _option.isEmpty) {
       //atualiza o primeiro operador
 
       updatefirstOperating(value);
-    } else if (option.isNotEmpty) {
+    } else if (_option.isNotEmpty) {
       //atualiza o segundo operador
       updateSecondOperating(value);
     }
