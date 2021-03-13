@@ -14,14 +14,11 @@ class CalculatorScreen extends StatefulWidget {
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expressionDisplay = "";
-
   String firstOperating = "";
   String secondOperating = "";
   String option = "";
-
   String operator = "";
-
-  bool _disableNumber = false;
+  CalculateModel calculate = CalculateModel();
 
   Widget _row({List<String> numbers, List<String> operator}) {
     return Row(
@@ -35,14 +32,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   number: operator[e - numbers.length],
                   onChanged: (value) {
                     print("voce digitou $value");
-
-                    if (!isConfig(value) &&
-                        isOperation(value) &&
-                        firstOperatingIsValid(firstOperating)) {
-                      updateOption(value);
-                    } else {
-                      update(value);
-                    }
+                    update(value);
                   },
                 )
               : DigitButton(
@@ -61,7 +51,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void updatefirstOperating(String value) {
     print("primeiro");
-
     setState(() {
       firstOperating += value;
       _expressionDisplay = "$firstOperating$option$secondOperating";
@@ -76,7 +65,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     });
   }
 
-  void updatesecondOperating(String value) {
+  void updateSecondOperating(String value) {
     print("terceiro");
     setState(() {
       secondOperating += value;
@@ -93,17 +82,40 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     });
   }
 
+  void clearValue() {
+    firstOperating = "";
+    secondOperating = "";
+    option = "";
+    _expressionDisplay = "";
+  }
 
-void result(){
-  
-}
+  void result() {
+    var cache;
+    if (firstOperating.isNotEmpty &&
+        option.isNotEmpty &&
+        secondOperating.isNotEmpty) {
+      print("resultado");
+
+      setState(() {
+        _expressionDisplay =
+            calculate.intelligent(option, firstOperating, secondOperating);
+        cache = _expressionDisplay;
+      });
+
+      clearValue();
+      firstOperating = formactDecimal(cache);
+      _expressionDisplay = "$firstOperating$option$secondOperating";
+    }
+  }
+
 //primeiro operador
-  update(String value) {
+  void update(String value) {
     switch (value) {
       case "AC":
         clear();
         break;
       case "=":
+        result();
         break;
       default:
         operation(value);
@@ -112,10 +124,19 @@ void result(){
   }
 
   void operation(String value) {
-    if (firstOperatingIsValid(firstOperating + value) && option.isEmpty) {
+    //atualiza o operador (-,+, *, /)
+    if (!isConfig(value) &&
+        isOperation(value) &&
+        firstOperatingIsValid(firstOperating)) {
+      updateOption(value);
+    } else if (firstOperatingIsValid(firstOperating + value) &&
+        option.isEmpty) {
+      //atualiza o primeiro operador
+
       updatefirstOperating(value);
     } else if (option.isNotEmpty) {
-      updatesecondOperating(value);
+      //atualiza o segundo operador
+      updateSecondOperating(value);
     }
   }
 

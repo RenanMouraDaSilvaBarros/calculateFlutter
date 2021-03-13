@@ -124,8 +124,6 @@ String calculate(String espression) {
   return "ERRO";
 }
 
-//news
-//validar primeiro operador
 bool firstOperatingIsValid(String value) {
   //
   try {
