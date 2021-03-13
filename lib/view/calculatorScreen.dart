@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:calculate/componets/digit_button.dart';
 import 'package:calculate/constants/operators.dart';
 import 'package:calculate/models/calculateModel.dart';
@@ -12,6 +14,13 @@ class CalculatorScreen extends StatefulWidget {
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expressionDisplay = "";
+
+  String firstOperating = "";
+  String secondOperating = "";
+  String option = "";
+
+  String operator = "";
+
   bool _disableNumber = false;
 
   Widget _row({List<String> numbers, List<String> operator}) {
@@ -25,13 +34,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.orange,
                   number: operator[e - numbers.length],
                   onChanged: (value) {
-                    if (operationIsAllowed(_expressionDisplay, value)) {
-                      setState(() {
-                        _direct(value);
-                        if (isOperation(value)) {
-                          _disableNumber = false;
-                        }
-                      });
+                    print("voce digitou $value");
+
+                    if (!isConfig(value) &&
+                        isOperation(value) &&
+                        firstOperatingIsValid(firstOperating)) {
+                      updateOption(value);
+                    } else {
+                      update(value);
                     }
                   },
                 )
@@ -39,14 +49,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   color: Colors.grey.withOpacity(0.6),
                   number: numbers[e],
                   onChanged: (value) {
-                    print("você digitou : $value");
-                    if (!_disableNumber) {
-                      setState(() {
-                        _direct(value);
-                      });
-                    } else {
-                      print("números desabilitado!");
-                    }
+                    print("voce $value");
+
+                    update(value);
                   },
                 );
         },
@@ -54,45 +59,63 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  void _addExpression(String value) {
-    _expressionDisplay += value;
+  void updatefirstOperating(String value) {
+    print("primeiro");
+
+    setState(() {
+      firstOperating += value;
+      _expressionDisplay = "$firstOperating$option$secondOperating";
+    });
   }
 
-  void _clear() {
-    print("limpando....");
+  void updateOption(String value) {
+    print("operador");
     setState(() {
+      option = value;
+      _expressionDisplay = "$firstOperating$option$secondOperating";
+    });
+  }
+
+  void updatesecondOperating(String value) {
+    print("terceiro");
+    setState(() {
+      secondOperating += value;
+      _expressionDisplay = "$firstOperating$option$secondOperating";
+    });
+  }
+
+  void clear() {
+    setState(() {
+      firstOperating = "";
+      secondOperating = "";
+      option = "";
       _expressionDisplay = "";
-      _disableNumber = false;
     });
   }
 
-  void _calculate() {
-    print("calcular: $_expressionDisplay");
-    CalculateModel _calculate = CalculateModel();
-    String _operation = getOperation(_expressionDisplay);
-    var _getNumbers = _expressionDisplay.split(_operation);
-    print("${_getNumbers.first} $_operation ${_getNumbers.first}");
 
-    _expressionDisplay =
-        _calculate.intelligent(_operation, _getNumbers.first, _getNumbers.last);
-    setState(() {
-      _expressionDisplay = formact(_expressionDisplay);
-
-      _disableNumber = true;
-    });
-  }
-
-  void _direct(String option) {
-    switch (option) {
-      case 'AC':
-        _clear();
+void result(){
+  
+}
+//primeiro operador
+  update(String value) {
+    switch (value) {
+      case "AC":
+        clear();
         break;
-      case '=':
-        _calculate();
+      case "=":
         break;
       default:
-        _addExpression(option);
+        operation(value);
         break;
+    }
+  }
+
+  void operation(String value) {
+    if (firstOperatingIsValid(firstOperating + value) && option.isEmpty) {
+      updatefirstOperating(value);
+    } else if (option.isNotEmpty) {
+      updatesecondOperating(value);
     }
   }
 
